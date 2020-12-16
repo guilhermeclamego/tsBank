@@ -1,4 +1,4 @@
 const controller = new NegociacaoController();
 
-document.querySelector('.form')
-        .addEventListener('submit', controller.adiciona.bind(controller));
+//usando o jQuery
+$('.form').submit(controller.adiciona.bind(controller));
