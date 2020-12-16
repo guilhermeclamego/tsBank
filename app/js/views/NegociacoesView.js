@@ -1,11 +1,4 @@
-class NegociacoesView {
-    constructor(seletor) {
-        this._elemento = document.querySelector(seletor);
-    }
-    //Converte o template ao elemento do DOM
-    update(model) {
-        this._elemento.innerHTML = this.template(model);
-    }
+class NegociacoesView extends View {
     //Define o que vai ser apresentado ao usuário
     template(model) {
         return `
