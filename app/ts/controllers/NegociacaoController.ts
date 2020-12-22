@@ -22,7 +22,6 @@ export class NegociacaoController {
 
         let data =  new Date(this._inputData.val().replace(/-/g, ','));
         
-
         if(!this._ehDiaUtil(data)){
             this._mensagemView.update('Só é possível cadastrar negociações em dias úteis!')
             return
