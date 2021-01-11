@@ -17,5 +17,14 @@
     "concurrently": "^3.4.0",
     "lite-server": "^2.3.0",
     "typescript": "^2.3.2"
-  }
+  },
+  "dependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/guilhermeclamego/tsBank.git"
+  },
+  "bugs": {
+    "url": "https://github.com/guilhermeclamego/tsBank/issues"
+  },
+  "homepage": "https://github.com/guilhermeclamego/tsBank#readme"
 }
