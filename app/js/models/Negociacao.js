@@ -1,17 +1,12 @@
-System.register(["./Imprimivel"], function (exports_1, context_1) {
+System.register([], function (exports_1, context_1) {
     "use strict";
-    var Imprimivel_1, Negociacao;
+    var Negociacao;
     var __moduleName = context_1 && context_1.id;
     return {
-        setters: [
-            function (Imprimivel_1_1) {
-                Imprimivel_1 = Imprimivel_1_1;
-            }
-        ],
+        setters: [],
         execute: function () {
-            Negociacao = class Negociacao extends Imprimivel_1.Imprimivel {
+            Negociacao = class Negociacao {
                 constructor(data, quantidade, valor) {
-                    super();
                     this.data = data;
                     this.quantidade = quantidade;
                     this.valor = valor;
