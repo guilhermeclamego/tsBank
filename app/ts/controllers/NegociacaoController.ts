@@ -53,23 +53,20 @@ export class NegociacaoController {
     }   
 
     //Importar dados da API
-    @throttle() //decorator para evento de ficar importando negociacoes, acionando espera de meio segundo
-    importaDados(){
-        function isOk(res: Response){
-            if(res.ok){
-                return res;
-            } else {
-                throw new Error(res.statusText);
-            }
-        }
-        
+     //decorator para evento de ficar importando negociacoes, acionando espera de meio segundo
+     @throttle()
+     importaDados() {
         this._service
-            .obterNegociacoes(isOk)
+            .obterNegociacoes(res => {
+                if(res.ok) return res;
+                throw new Error(res.statusText);
+            })
             .then(negociacoes => {
                 negociacoes.forEach(negociacao => 
                     this._negociacoes.adiciona(negociacao));
                 this._negociacoesView.update(this._negociacoes);
-            });  
+            });
+
     }
 }
 

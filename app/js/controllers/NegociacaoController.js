@@ -47,16 +47,12 @@ System.register(["../views/index", "../models/index", "../helpers/decorators/ind
                     return data.getDay() != DiaDaSemana.Sabado && data.getDay() != DiaDaSemana.Domingo;
                 }
                 importaDados() {
-                    function isOk(res) {
-                        if (res.ok) {
-                            return res;
-                        }
-                        else {
-                            throw new Error(res.statusText);
-                        }
-                    }
                     this._service
-                        .obterNegociacoes(isOk)
+                        .obterNegociacoes(res => {
+                        if (res.ok)
+                            return res;
+                        throw new Error(res.statusText);
+                    })
                         .then(negociacoes => {
                         negociacoes.forEach(negociacao => this._negociacoes.adiciona(negociacao));
                         this._negociacoesView.update(this._negociacoes);
