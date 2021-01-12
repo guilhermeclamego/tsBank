@@ -50,6 +50,11 @@ export class NegociacaoController {
     private _ehDiaUtil(data: Date) {
         return data.getDay() != DiaDaSemana.Sabado && data.getDay() != DiaDaSemana.Domingo;
     }   
+
+    //Importar dados da API
+    importaDados(){
+        alert('teste');
+    }
 }
 
 //Domingo 0, Segunda 1...
