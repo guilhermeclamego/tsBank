@@ -1,5 +1,5 @@
 import { NegociacoesView, MensagemView } from '../views/index';
-import { Negociacoes, Negociacao } from '../models/index';
+import { Negociacoes, Negociacao, NegociacaoParcial } from '../models/index';
 import { domInject } from '../helpers/decorators/index';
 
 export class NegociacaoController {
@@ -53,7 +53,25 @@ export class NegociacaoController {
 
     //Importar dados da API
     importaDados(){
-        alert('teste');
+        function isOk(res: Response){
+            if(res.ok){
+                return res;
+            } else {
+                throw new Error(res.statusText);
+            }
+        }
+        fetch('http://localhost:8080/dados')
+            .then(res => isOk(res))
+            .then(res => res.json())
+            .then((dados: NegociacaoParcial[]) => {  
+            //tipo interface NegociacaoParcial, para não deixar colocar os campos da API errados e validar os mesmos
+                    dados
+                    .map(dado => new Negociacao(new Date(), dado.vezes, dado.montante))
+                    .forEach(negociacao => this._negociacoes.adiciona(negociacao))
+                    this._negociacoesView.update(this._negociacoes)
+                })                    
+            .catch(err => console.log(err.message));
+            
     }
 }
 
