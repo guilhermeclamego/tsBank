@@ -27,7 +27,7 @@ System.register(["../views/index", "../models/index", "../helpers/decorators/ind
             NegociacaoController = class NegociacaoController {
                 constructor() {
                     this._negociacoes = new index_2.Negociacoes();
-                    this._negociacoesView = new index_1.NegociacoesView('#negociacoesView', true);
+                    this._negociacoesView = new index_1.NegociacoesView('#negociacoesView');
                     this._mensagemView = new index_1.MensagemView('#mensagemView');
                     this._service = new index_4.NegociacaoService();
                     this._negociacoesView.update(this._negociacoes);
@@ -35,7 +35,7 @@ System.register(["../views/index", "../models/index", "../helpers/decorators/ind
                 adiciona() {
                     let data = new Date(this._inputData.val().replace(/-/g, ','));
                     if (!this._ehDiaUtil(data)) {
-                        this._mensagemView.update('Só é possível cadastrar negociações em dias úteis!');
+                        this._mensagemView.update('Somente negociações em dias úteis, por favor!');
                         return;
                     }
                     const negociacao = new index_2.Negociacao(data, parseInt(this._inputQuantidade.val()), parseFloat(this._inputValor.val()));
@@ -49,9 +49,12 @@ System.register(["../views/index", "../models/index", "../helpers/decorators/ind
                 importaDados() {
                     this._service
                         .obterNegociacoes(res => {
-                        if (res.ok)
+                        if (res.ok) {
                             return res;
-                        throw new Error(res.statusText);
+                        }
+                        else {
+                            throw new Error(res.statusText);
+                        }
                     })
                         .then(negociacoes => {
                         negociacoes.forEach(negociacao => this._negociacoes.adiciona(negociacao));
@@ -78,7 +81,7 @@ System.register(["../views/index", "../models/index", "../helpers/decorators/ind
             (function (DiaDaSemana) {
                 DiaDaSemana[DiaDaSemana["Domingo"] = 0] = "Domingo";
                 DiaDaSemana[DiaDaSemana["Segunda"] = 1] = "Segunda";
-                DiaDaSemana[DiaDaSemana["Ter\u00E7a"] = 2] = "Ter\u00E7a";
+                DiaDaSemana[DiaDaSemana["Terca"] = 2] = "Terca";
                 DiaDaSemana[DiaDaSemana["Quarta"] = 3] = "Quarta";
                 DiaDaSemana[DiaDaSemana["Quinta"] = 4] = "Quinta";
                 DiaDaSemana[DiaDaSemana["Sexta"] = 5] = "Sexta";

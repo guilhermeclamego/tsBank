@@ -1,5 +1,5 @@
 import { NegociacoesView, MensagemView } from '../views/index';
-import { Negociacoes, Negociacao } from '../models/index';
+import { Negociacao, Negociacoes } from '../models/index';
 import { domInject, throttle } from '../helpers/decorators/index';
 import { NegociacaoService } from '../services/index';
 
@@ -10,30 +10,32 @@ export class NegociacaoController {
 
     @domInject('#quantidade')
     private _inputQuantidade: JQuery;
-
+    
     @domInject('#valor')
     private _inputValor: JQuery;
-
+    
     private _negociacoes = new Negociacoes();
-    private _negociacoesView = new NegociacoesView('#negociacoesView', true);
+    private _negociacoesView = new NegociacoesView('#negociacoesView');
     private _mensagemView = new MensagemView('#mensagemView');
 
     private _service = new NegociacaoService();
-
+    
     constructor() {
         this._negociacoesView.update(this._negociacoes);
     }
 
     @throttle()
-    adiciona(){                           
-        let data =  new Date(this._inputData.val().replace(/-/g, ','));
-        
-        if(!this._ehDiaUtil(data)){
-            this._mensagemView.update('Só é possível cadastrar negociações em dias úteis!')
-            return
+    adiciona() {
+        let data = new Date(this._inputData.val().replace(/-/g, ','));
+
+        if(!this._ehDiaUtil(data)) {
+
+            this._mensagemView.update('Somente negociações em dias úteis, por favor!');
+            return 
         }
+
         const negociacao = new Negociacao(
-            data,
+            data, 
             parseInt(this._inputQuantidade.val()),
             parseFloat(this._inputValor.val())
         );
@@ -45,38 +47,45 @@ export class NegociacaoController {
         
         //Mensagem de sucesso
         this._mensagemView.update('Negociação adiciona com sucesso!');
-
     }
 
     private _ehDiaUtil(data: Date) {
+
         return data.getDay() != DiaDaSemana.Sabado && data.getDay() != DiaDaSemana.Domingo;
-    }   
+    }
 
     //Importar dados da API
      //decorator para evento de ficar importando negociacoes, acionando espera de meio segundo
-     @throttle()
-     importaDados() {
+    @throttle()
+    importaDados() {
+
         this._service
             .obterNegociacoes(res => {
-                if(res.ok) return res;
-                throw new Error(res.statusText);
+
+                if(res.ok) {
+                    return res;
+                } else {
+                    throw new Error(res.statusText);
+                }
             })
             .then(negociacoes => {
+
                 negociacoes.forEach(negociacao => 
                     this._negociacoes.adiciona(negociacao));
+                
                 this._negociacoesView.update(this._negociacoes);
-            });
 
+            });
     }
 }
 
-//Domingo 0, Segunda 1...
 enum DiaDaSemana {
-    Domingo,
-    Segunda,
-    Terça,
-    Quarta,
-    Quinta,
-    Sexta,
+
+    Domingo, 
+    Segunda, 
+    Terca, 
+    Quarta, 
+    Quinta, 
+    Sexta, 
     Sabado
 }
