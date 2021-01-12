@@ -1,6 +1,7 @@
 import { NegociacoesView, MensagemView } from '../views/index';
-import { Negociacoes, Negociacao, NegociacaoParcial } from '../models/index';
-import { domInject } from '../helpers/decorators/index';
+import { Negociacoes, Negociacao } from '../models/index';
+import { domInject, throttle } from '../helpers/decorators/index';
+import { NegociacaoService } from '../services/index';
 
 export class NegociacaoController {
 
@@ -17,14 +18,14 @@ export class NegociacaoController {
     private _negociacoesView = new NegociacoesView('#negociacoesView', true);
     private _mensagemView = new MensagemView('#mensagemView');
 
+    private _service = new NegociacaoService();
+
     constructor() {
         this._negociacoesView.update(this._negociacoes);
     }
 
-    adiciona(event: Event){   
-        
-        event.preventDefault();
-
+    @throttle()
+    adiciona(){                           
         let data =  new Date(this._inputData.val().replace(/-/g, ','));
         
         if(!this._ehDiaUtil(data)){
@@ -52,6 +53,7 @@ export class NegociacaoController {
     }   
 
     //Importar dados da API
+    @throttle() //decorator para evento de ficar importando negociacoes, acionando espera de meio segundo
     importaDados(){
         function isOk(res: Response){
             if(res.ok){
@@ -60,18 +62,14 @@ export class NegociacaoController {
                 throw new Error(res.statusText);
             }
         }
-        fetch('http://localhost:8080/dados')
-            .then(res => isOk(res))
-            .then(res => res.json())
-            .then((dados: NegociacaoParcial[]) => {  
-            //tipo interface NegociacaoParcial, para não deixar colocar os campos da API errados e validar os mesmos
-                    dados
-                    .map(dado => new Negociacao(new Date(), dado.vezes, dado.montante))
-                    .forEach(negociacao => this._negociacoes.adiciona(negociacao))
-                    this._negociacoesView.update(this._negociacoes)
-                })                    
-            .catch(err => console.log(err.message));
-            
+        
+        this._service
+            .obterNegociacoes(isOk)
+            .then(negociacoes => {
+                negociacoes.forEach(negociacao => 
+                    this._negociacoes.adiciona(negociacao));
+                this._negociacoesView.update(this._negociacoes);
+            });  
     }
 }
 
