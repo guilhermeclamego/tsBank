@@ -1,6 +1,9 @@
 import { MeuObjeto } from './MeuObjeto';
+import { MensagemView } from '../views/index';
 
 export class Negociacao implements MeuObjeto<Negociacao> {
+
+    private _mensagemView = new MensagemView('#mensagemView');
 
     constructor(readonly data: Date, readonly quantidade: number, readonly valor: number) { 
         
@@ -20,10 +23,16 @@ export class Negociacao implements MeuObjeto<Negociacao> {
         )
     }
 
+
     ehIgual(negociacao: Negociacao): boolean {
-        return this.data.getDate() == negociacao.data.getDate()
-            && this.data.getMonth() == negociacao.data.getMonth()
-            && this.data.getFullYear() == negociacao.data.getFullYear()
+
+        let verificaData = (this.data.getDate() == negociacao.data.getDate() && this.data.getMonth() == negociacao.data.getMonth() && this.data.getFullYear() == negociacao.data.getFullYear());
+        if (verificaData) {
+            this._mensagemView.update("Não é possível importar negociações duplicadas!");
+            return true;
+        } else {
+            return false;
+        }         
     }
 }
 

@@ -66,7 +66,7 @@ export class NegociacaoController {
                 }
             })
             .then(negociacoesParaImportar => {
-                const negociacoesJaImportadas = this._negociacoes.paraArray();
+               const negociacoesJaImportadas = this._negociacoes.paraArray();
 
                 negociacoesParaImportar
                     .filter(negociacao => 
